@@ -34,7 +34,7 @@ We're a small team bootstrapping with very limited funds. We offer revenue share
 
 See the [full landing page](https://sturdy-acorn-gfgh.here.now/) for details.
 
-**Contact:** ghost-monday@tuta.com
+**Contact:** talkfightciti@gmail.com
 
 ## Repository
 

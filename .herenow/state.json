@@ -5,6 +5,12 @@
       "claimToken": "dc2fe23ca97e43d043f814169489a70ce80bcbf7751a9d2ea4820f71ef07b1f2",
       "claimUrl": "https://here.now/claim?slug=sturdy-acorn-gfgh&token=dc2fe23ca97e43d043f814169489a70ce80bcbf7751a9d2ea4820f71ef07b1f2",
       "expiresAt": "2026-04-27T03:33:25.395Z"
+    },
+    "calm-hutch-k7yp": {
+      "siteUrl": "https://calm-hutch-k7yp.here.now/",
+      "claimToken": "611842106d354b4de77307d204e29d1a45ed375c59b6cc72296da0d6d40e101c",
+      "claimUrl": "https://here.now/claim?slug=calm-hutch-k7yp&token=611842106d354b4de77307d204e29d1a45ed375c59b6cc72296da0d6d40e101c",
+      "expiresAt": "2026-04-27T03:48:53.672Z"
     }
   }
 }
