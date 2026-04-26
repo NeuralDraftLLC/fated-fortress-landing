@@ -1,0 +1,10 @@
+{
+  "publishes": {
+    "sturdy-acorn-gfgh": {
+      "siteUrl": "https://sturdy-acorn-gfgh.here.now/",
+      "claimToken": "dc2fe23ca97e43d043f814169489a70ce80bcbf7751a9d2ea4820f71ef07b1f2",
+      "claimUrl": "https://here.now/claim?slug=sturdy-acorn-gfgh&token=dc2fe23ca97e43d043f814169489a70ce80bcbf7751a9d2ea4820f71ef07b1f2",
+      "expiresAt": "2026-04-27T03:33:25.395Z"
+    }
+  }
+}
