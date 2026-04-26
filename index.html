@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FatedFortress — AI-Scoped Task Marketplace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;700;900&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #131313;
+      --surface-lowest: #0e0e0e;
+      --surface-low: #1c1b1b;
+      --surface: #201f1f;
+      --surface-high: #2a2a2a;
+      --surface-highest: #353534;
+      --ink: #e5e2e1;
+      --ink-dim: rgba(190,200,206,0.65);
+      --border: #3f484e;
+      --accent: #7dd3fc;
+      --font-mono: 'Geist Mono', ui-monospace, monospace;
+      --font-panel: 'Space Grotesk', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); }
+
+    /* ── NAV ── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 40;
+      height: 48px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-brand {
+      font-family: var(--font-panel);
+      font-weight: 900;
+      font-size: 14px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+    .nav-links {
+      display: flex; gap: 24px; align-items: center;
+    }
+    .nav-links a {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-dim);
+      text-decoration: none;
+      transition: color 0.1s;
+    }
+    .nav-links a:hover { color: var(--ink); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 80px 48px 64px;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 24px;
+    }
+    .hero-headline {
+      font-family: var(--font-panel);
+      font-size: clamp(28px, 4vw, 56px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      color: var(--ink);
+      max-width: 800px;
+      margin-bottom: 24px;
+    }
+    .hero-sub {
+      font-size: 14px;
+      color: var(--ink-dim);
+      max-width: 600px;
+      line-height: 1.6;
+      margin-bottom: 48px;
+    }
+    .cta-row {
+      display: flex; gap: 16px; flex-wrap: wrap; align-items: center;
+    }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--accent); color: #003547;
+      font-family: var(--font-mono); font-weight: 900;
+      font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 12px 20px; border: 1px solid var(--accent);
+      cursor: pointer; text-decoration: none; border-radius: 0;
+      transition: background 0.1s, color 0.1s;
+    }
+    .btn-primary:hover { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: transparent; color: var(--ink);
+      font-family: var(--font-mono); font-weight: 700;
+      font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 12px 20px; border: 1px solid var(--border);
+      cursor: pointer; text-decoration: none; border-radius: 0;
+      transition: border-color 0.1s, background 0.1s;
+    }
+    .btn-ghost:hover { border-color: var(--ink); background: var(--surface-low); }
+    .social-proof {
+      margin-top: 64px;
+      display: flex; align-items: center; gap: 12px;
+      font-size: 11px; color: var(--ink-dim);
+    }
+    .avatar-row { display: flex; }
+    .avatar-dot {
+      width: 24px; height: 24px; border-radius: 0;
+      background: var(--surface-high);
+      border: 1px solid var(--border);
+      margin-right: -6px;
+    }
+
+    /* ── HOW IT WORKS ── */
+    .section {
+      padding: 80px 48px;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-family: var(--font-panel);
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .section-sub {
+      font-size: 13px;
+      color: var(--ink-dim);
+      margin-bottom: 48px;
+    }
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+    .step {
+      background: var(--surface-lowest);
+      padding: 24px;
+    }
+    .step-num {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+    .step-title {
+      font-family: var(--font-panel);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+    .step-desc {
+      font-size: 12px;
+      color: var(--ink-dim);
+      line-height: 1.6;
+    }
+
+    /* ── WHO IT'S FOR ── */
+    .split-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+    @media (max-width: 640px) { .split-grid { grid-template-columns: 1fr; } }
+    .split-card {
+      background: var(--surface-lowest);
+      padding: 32px;
+    }
+    .split-card h3 {
+      font-family: var(--font-panel);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+    .split-card p { font-size: 12px; color: var(--ink-dim); line-height: 1.7; margin-bottom: 16px; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      padding: 4px 8px;
+      border: 1px solid var(--border);
+      color: var(--ink-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* ── WORK WITH US ── */
+    .work-section { background: var(--surface-lowest); }
+    .work-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+    }
+    @media (max-width: 640px) { .work-grid { grid-template-columns: 1fr; } }
+    .work-offer h3, .work-seek h3 {
+      font-family: var(--font-panel);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .work-list { list-style: none; }
+    .work-list li {
+      font-size: 12px;
+      color: var(--ink-dim);
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: flex-start; gap: 10px;
+    }
+    .work-list li::before { content: '—'; color: var(--accent); flex-shrink: 0; }
+    .apply-note {
+      margin-top: 32px;
+      padding: 20px;
+      border: 1px solid var(--accent);
+      background: rgba(125,211,252,0.05);
+      font-size: 12px;
+      color: var(--ink-dim);
+      line-height: 1.6;
+    }
+    .apply-note strong { color: var(--ink); display: block; margin-bottom: 8px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; }
+
+    /* ── ARCHITECTURE ── */
+    .arch-flow {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-top: 32px;
+    }
+    .arch-node {
+      background: var(--surface-lowest);
+      padding: 20px;
+    }
+    .arch-node-name {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .arch-node-desc {
+      font-size: 11px;
+      color: var(--ink-dim);
+      line-height: 1.5;
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      height: 40px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px;
+      border-top: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-dim);
+    }
+    .footer-status { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-brand">FatedFortress</div>
+  <div class="nav-links">
+    <a href="#how-it-works">How It Works</a>
+    <a href="#who-its-for">Who It's For</a>
+    <a href="#work-with-us">Work With Us</a>
+    <a href="mailto:amir@neuraldraft LLC.com">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">AI SCOPING · STRIPE ESCROW · ZERO AMBIGUITY</div>
+  <h1 class="hero-headline">Replace vague briefs with math and guaranteed payouts.</h1>
+  <p class="hero-sub">FatedFortress turns messy project ideas into machine-enforced contracts — funds are pre-authorized, scope is written as code, and files are auto-verified before money moves.</p>
+  <div class="cta-row">
+    <a href="#work-with-us" class="btn-primary">Work With Us</a>
+    <a href="#how-it-works" class="btn-ghost">See How It Works</a>
+  </div>
+  <div class="social-proof">
+    <div class="avatar-row">
+      <div class="avatar-dot"></div>
+      <div class="avatar-dot"></div>
+      <div class="avatar-dot"></div>
+    </div>
+    Built for builders who are done waiting 60 days to get paid or arguing about what "done" means.
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="how-it-works">
+  <div class="section-eyebrow">HOW IT WORKS</div>
+  <h2 class="section-title">From brief to paid in four steps.</h2>
+  <p class="section-sub">No back-and-forth. No scope creep. No chasing invoices.</p>
+
+  <div class="steps-grid">
+    <div class="step">
+      <div class="step-num">01 — SCOPE</div>
+      <div class="step-title">Describe the work in plain language.</div>
+      <div class="step-desc">GPT-4o decomposes your brief into discrete, deliverable tasks with explicit spec constraints. JSON fields, file formats, pixel counts, sample rates — the exact rules for "done".</div>
+    </div>
+    <div class="step">
+      <div class="step-num">02 — FUND</div>
+      <div class="step-title">Lock funds before work begins.</div>
+      <div class="step-desc">When a contributor claims a task, Stripe reserves the payout instantly via payment intent. Contributors know the money is there before they start. Hosts know no one works for phantom promises.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">03 — VERIFY</div>
+      <div class="step-title">AI checks delivery before human review.</div>
+      <div class="step-desc">Submissions run through an automated verifier that checks file headers, resolution, duration, and content against the task spec. Garbage in, bounced out automatically.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">04 — RELEASE</div>
+      <div class="step-title">Host approves or 48h auto-release.</div>
+      <div class="step-desc">Host has 48 hours to review. If they don't act, funds auto-release to the contributor. Every decision is immutably logged. No arguing about "done".</div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO IT'S FOR -->
+<section class="section" id="who-its-for">
+  <div class="section-eyebrow">WHO IT'S FOR</div>
+  <h2 class="section-title">Two sides. One marketplace.</h2>
+  <p class="section-sub">FatedFortress connects hosts with structured work to contributors who want guaranteed报酬.</p>
+
+  <div class="split-grid">
+    <div class="split-card">
+      <h3>For Hosts</h3>
+      <p>You have work that needs to get done — UI components, API endpoints, copywriting, design assets. You want to post it once, have it scoped by AI, funded securely, and delivered to spec without chasing anyone.</p>
+      <div class="tag-list">
+        <span class="tag">Product Owners</span>
+        <span class="tag">Founders</span>
+        <span class="tag">Technical Leads</span>
+        <span class="tag">Project Managers</span>
+      </div>
+    </div>
+    <div class="split-card">
+      <h3>For Contributors</h3>
+      <p>You have skills — frontend, backend, design, writing, data — and you want to claim real work with real money already on hold. No more speculative free labor or unpaid revision loops.</p>
+      <div class="tag-list">
+        <span class="tag">Frontend Devs</span>
+        <span class="tag">Backend Engineers</span>
+        <span class="tag">Designers</span>
+        <span class="tag">Technical Writers</span>
+        <span class="tag">Specialists</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WORK WITH US -->
+<section class="section work-section" id="work-with-us">
+  <div class="section-eyebrow">WORK WITH US</div>
+  <h2 class="section-title">We're looking for a small number of skilled people.</h2>
+  <p class="section-sub">No upfront payment. Meaningful revenue share. Real ownership in the upside.</p>
+
+  <div class="work-grid">
+    <div class="work-offer">
+      <h3>What We Offer</h3>
+      <ul class="work-list">
+        <li>Revenue share on all platform revenue your work helps generate (typically 5–15%)</li>
+        <li>Clear, written contract protecting both sides</li>
+        <li>Real equity in the upside if this succeeds</li>
+        <li>Full credit and public visibility for your contributions</li>
+        <li>Flexible, async collaboration — no standup calls</li>
+      </ul>
+    </div>
+    <div class="work-seek">
+      <h3>Who We're Looking For</h3>
+      <ul class="work-list">
+        <li>Strong frontend developers (especially UI/UX and dark-mode aesthetic)</li>
+        <li>Backend / Supabase specialists comfortable with RLS, Edge Functions, pg_cron</li>
+        <li>Marketing / growth people who understand developer tooling</li>
+        <li>Designers who understand technical products</li>
+        <li>Technical writers who can translate complex systems into clear docs</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="apply-note">
+    <strong>How to apply</strong>
+    Reach out at <strong>amir@neuraldraft LLC.com</strong> with what you're interested in, what you bring, and your GitHub or portfolio. If it feels right, we'll talk. No recruiters, no agencies, no cold spam.
+  </div>
+</section>
+
+<!-- ARCHITECTURE OVERVIEW -->
+<section class="section" id="architecture">
+  <div class="section-eyebrow">HOW IT'S BUILT</div>
+  <h2 class="section-title">The technical stack.</h2>
+  <p class="section-sub">A complete, production-grade system — no toy demos, no placeholder code.</p>
+
+  <div class="arch-flow">
+    <div class="arch-node">
+      <div class="arch-node-name">Frontend</div>
+      <div class="arch-node-desc">Vite SPA — vanilla TypeScript, string-returning components, Swiss-brutalist dark UI</div>
+    </div>
+    <div class="arch-node">
+      <div class="arch-node-name">Auth</div>
+      <div class="arch-node-desc">Supabase Auth — magic link + Google OAuth with role-gated redirects (host / contributor)</div>
+    </div>
+    <div class="arch-node">
+      <div class="arch-node-name">Database</div>
+      <div class="arch-node-desc">PostgreSQL via Supabase — RLS policies, pg_cron for claim expiry + auto-release</div>
+    </div>
+    <div class="arch-node">
+      <div class="arch-node-name">AI Scoping</div>
+      <div class="arch-node-desc">GPT-4o via edge function decomposes natural-language briefs into JSON task specs</div>
+    </div>
+    <div class="arch-node">
+      <div class="arch-node-name">Payments</div>
+      <div class="arch-node-desc">Stripe Connect — payment intents with manual capture for 24h escrow lock on claim</div>
+    </div>
+    <div class="arch-node">
+      <div class="arch-node-name">Realtime</div>
+      <div class="arch-node-desc">Y.js + y-webrtc for live collaborative review sessions with cursor presence</div>
+    </div>
+    <div class="arch-node">
+      <div class="arch-node-name">Verification</div>
+      <div class="arch-node-desc">Cloudflare Worker validates file MIME, size, and content before entering review queue</div>
+    </div>
+    <div class="arch-node">
+      <div class="arch-node-name">Storage</div>
+      <div class="arch-node-desc">Supabase Storage — presigned URLs for direct upload, private buckets per project</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <span>FatedFortress · NeuralDraft LLC · <span class="footer-status">SYSTEM_STABLE</span></span>
+  <span>parkerbreaker.com</span>
+</footer>
+
+</body>
+</html>
